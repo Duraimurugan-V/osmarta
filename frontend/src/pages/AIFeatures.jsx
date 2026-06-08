@@ -86,7 +86,6 @@ export default function AIFeatures() {
           )}
         </div>
         </div>
-      </div>
 
       {/* Trending Products Row */}
       {trending.length > 0 && (
