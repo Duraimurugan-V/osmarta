@@ -86,8 +86,20 @@ ALTER TABLE reviews ENABLE ROW LEVEL SECURITY;
 
 -- Basic Policies (To be restricted later)
 CREATE POLICY "Public profiles are viewable by everyone." ON profiles FOR SELECT USING (true);
-CREATE POLICY "Public listings are viewable by everyone." ON listings FOR SELECT USING (true);
+DROP POLICY IF EXISTS "Users can insert their own profile." ON profiles;
 CREATE POLICY "Users can insert their own profile." ON profiles FOR INSERT WITH CHECK (auth.uid() = id);
+
+DROP POLICY IF EXISTS "Users can insert their own listings." ON listings;
+CREATE POLICY "Users can insert their own listings." ON listings FOR INSERT WITH CHECK (auth.uid() = seller_id);
+
+DROP POLICY IF EXISTS "Users can update their own listings." ON listings;
+CREATE POLICY "Users can update their own listings." ON listings FOR UPDATE USING (auth.uid() = seller_id);
+
+DROP POLICY IF EXISTS "Users can insert reviews." ON reviews;
+CREATE POLICY "Users can insert reviews." ON reviews FOR INSERT WITH CHECK (auth.uid() = reviewer_id);
+
+DROP POLICY IF EXISTS "Public reviews are viewable by everyone." ON reviews;
+CREATE POLICY "Public reviews are viewable by everyone." ON reviews FOR SELECT USING (true);
 
 -- Contact Messages Table
 CREATE TABLE contact_messages (
