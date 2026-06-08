@@ -1,7 +1,35 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { supabase } from '../lib/supabase';
 
 export default function Home() {
+  const [contactForm, setContactForm] = useState({
+    fullName: '',
+    email: '',
+    mobile: '',
+    subject: '',
+    message: ''
+  });
+
+  const handleContactSubmit = async (e) => {
+    e.preventDefault();
+    const payload = {
+      full_name: contactForm.fullName,
+      email: contactForm.email,
+      mobile_number: contactForm.mobile,
+      subject: contactForm.subject,
+      message: contactForm.message
+    };
+
+    const { error } = await supabase.from('contact_messages').insert([payload]);
+    
+    if (error) {
+      alert("Failed to send message: " + error.message);
+    } else {
+      alert("Message sent successfully! We will get back to you soon.");
+      setContactForm({ fullName: '', email: '', mobile: '', subject: '', message: '' });
+    }
+  };
   return (
     <div className="home-page">
       
@@ -151,26 +179,26 @@ export default function Home() {
             {/* Contact Form */}
             <div style={{ background: 'var(--bg-card)', padding: 'var(--space-8)', borderRadius: 'var(--radius-2xl)', border: '1px solid var(--border-default)' }}>
               <h3 style={{ marginBottom: 'var(--space-6)' }}>Send Us a Message</h3>
-              <form onSubmit={e => { e.preventDefault(); alert('Message sent!'); }}>
+              <form onSubmit={handleContactSubmit}>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-4)', marginBottom: 'var(--space-4)' }}>
                   <div>
                     <label style={{ display: 'block', marginBottom: 'var(--space-2)', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Full Name *</label>
-                    <input required type="text" placeholder="Your full name" style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', background: 'var(--bg-elevated)', border: '1px solid var(--border-default)', color: 'white' }} />
+                    <input required type="text" value={contactForm.fullName} onChange={e => setContactForm({...contactForm, fullName: e.target.value})} placeholder="Your full name" style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', background: 'var(--bg-elevated)', border: '1px solid var(--border-default)', color: 'white' }} />
                   </div>
                   <div>
                     <label style={{ display: 'block', marginBottom: 'var(--space-2)', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Email *</label>
-                    <input required type="email" placeholder="your@email.com" style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', background: 'var(--bg-elevated)', border: '1px solid var(--border-default)', color: 'white' }} />
+                    <input required type="email" value={contactForm.email} onChange={e => setContactForm({...contactForm, email: e.target.value})} placeholder="your@email.com" style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', background: 'var(--bg-elevated)', border: '1px solid var(--border-default)', color: 'white' }} />
                   </div>
                 </div>
                 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-4)', marginBottom: 'var(--space-4)' }}>
                   <div>
                     <label style={{ display: 'block', marginBottom: 'var(--space-2)', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Mobile Number *</label>
-                    <input required type="tel" placeholder="+91 xxxxxxxxxx" style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', background: 'var(--bg-elevated)', border: '1px solid var(--border-default)', color: 'white' }} />
+                    <input required type="tel" value={contactForm.mobile} onChange={e => setContactForm({...contactForm, mobile: e.target.value})} placeholder="+91 xxxxxxxxxx" style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', background: 'var(--bg-elevated)', border: '1px solid var(--border-default)', color: 'white' }} />
                   </div>
                   <div>
                     <label style={{ display: 'block', marginBottom: 'var(--space-2)', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Subject *</label>
-                    <select required style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', background: 'var(--bg-elevated)', border: '1px solid var(--border-default)', color: 'white' }}>
+                    <select required value={contactForm.subject} onChange={e => setContactForm({...contactForm, subject: e.target.value})} style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', background: 'var(--bg-elevated)', border: '1px solid var(--border-default)', color: 'white' }}>
                       <option value="">Select a subject</option>
                       <option value="support">Support</option>
                       <option value="sales">Sales</option>
@@ -181,7 +209,7 @@ export default function Home() {
 
                 <div style={{ marginBottom: 'var(--space-4)' }}>
                   <label style={{ display: 'block', marginBottom: 'var(--space-2)', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Message *</label>
-                  <textarea required placeholder="Tell us how we can help you..." style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', background: 'var(--bg-elevated)', border: '1px solid var(--border-default)', color: 'white', minHeight: '100px' }}></textarea>
+                  <textarea required value={contactForm.message} onChange={e => setContactForm({...contactForm, message: e.target.value})} placeholder="Tell us how we can help you..." style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', background: 'var(--bg-elevated)', border: '1px solid var(--border-default)', color: 'white', minHeight: '100px' }}></textarea>
                 </div>
                 
                 <button type="submit" className="btn btn-primary" style={{ width: '100%', padding: '1rem', marginBottom: 'var(--space-2)' }}>Send Message</button>

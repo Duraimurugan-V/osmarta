@@ -68,3 +68,17 @@ ALTER TABLE reviews ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Public profiles are viewable by everyone." ON profiles FOR SELECT USING (true);
 CREATE POLICY "Public listings are viewable by everyone." ON listings FOR SELECT USING (true);
 CREATE POLICY "Users can insert their own profile." ON profiles FOR INSERT WITH CHECK (auth.uid() = id);
+
+-- Contact Messages Table
+CREATE TABLE contact_messages (
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  full_name TEXT NOT NULL,
+  email TEXT NOT NULL,
+  mobile_number TEXT,
+  subject TEXT,
+  message TEXT NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+ALTER TABLE contact_messages ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Anyone can insert contact messages." ON contact_messages FOR INSERT WITH CHECK (true);
