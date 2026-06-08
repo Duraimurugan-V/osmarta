@@ -1,0 +1,349 @@
+/* ═══════════════════════════════════════════════════════════
+   OSMART ANIMATIONS
+═══════════════════════════════════════════════════════════ */
+
+/* ── Keyframe Definitions ──────────────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(32px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeLeft {
+  from { opacity: 0; transform: translateX(40px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes fadeRight {
+  from { opacity: 0; transform: translateX(-40px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  33% { transform: translateY(-12px) rotate(1deg); }
+  66% { transform: translateY(-6px) rotate(-1deg); }
+}
+@keyframes floatSlow {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-16px) rotate(2deg); }
+}
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+@keyframes slideInUp {
+  from { opacity: 0; transform: translateY(100%); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes bounceIn {
+  0% { opacity: 0; transform: scale(0.3); }
+  50% { opacity: 1; transform: scale(1.05); }
+  70% { transform: scale(0.9); }
+  100% { transform: scale(1); }
+}
+@keyframes spinOnce {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@keyframes typewriter {
+  from { width: 0; }
+  to   { width: 100%; }
+}
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+@keyframes wave {
+  0%, 100% { transform: scaleY(0.4); }
+  50% { transform: scaleY(1); }
+}
+@keyframes countUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Animation Utility Classes ─────────────────────────── */
+.animate-fade-up {
+  animation: fadeUp 0.7s var(--ease-out) both;
+  animation-delay: var(--delay, 0s);
+}
+.animate-fade-left {
+  animation: fadeLeft 0.7s var(--ease-out) both;
+  animation-delay: var(--delay, 0s);
+}
+.animate-fade-right {
+  animation: fadeRight 0.7s var(--ease-out) both;
+  animation-delay: var(--delay, 0s);
+}
+.animate-fade-in {
+  animation: fadeIn 0.5s var(--ease-out) both;
+  animation-delay: var(--delay, 0s);
+}
+.animate-scale-in {
+  animation: scaleIn 0.5s var(--ease-spring) both;
+  animation-delay: var(--delay, 0s);
+}
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+  animation-delay: var(--delay, 0s);
+}
+.animate-float-slow {
+  animation: floatSlow 8s ease-in-out infinite;
+  animation-delay: var(--delay, 1s);
+}
+
+/* ── Scroll-Triggered Animations ───────────────────────── */
+.animate-on-scroll {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.7s var(--ease-out),
+              transform 0.7s var(--ease-out);
+}
+.animate-on-scroll.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.animate-on-scroll:nth-child(2) { transition-delay: 0.1s; }
+.animate-on-scroll:nth-child(3) { transition-delay: 0.2s; }
+.animate-on-scroll:nth-child(4) { transition-delay: 0.3s; }
+.animate-on-scroll:nth-child(5) { transition-delay: 0.4s; }
+.animate-on-scroll:nth-child(6) { transition-delay: 0.5s; }
+
+/* ── Shimmer Loading Effect ─────────────────────────────── */
+.shimmer {
+  background: linear-gradient(90deg, var(--bg-card) 25%, var(--bg-card-hover) 50%, var(--bg-card) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* ── Gradient Animation ─────────────────────────────────── */
+.animated-gradient {
+  background: linear-gradient(270deg, #7C3AED, #06B6D4, #F59E0B, #EC4899);
+  background-size: 400% 400%;
+  animation: gradientShift 6s ease infinite;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Voice Wave Animation ────────────────────────────────── */
+.voice-wave {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  height: 20px;
+}
+.voice-wave span {
+  display: block;
+  width: 3px;
+  background: var(--brand-primary);
+  border-radius: 2px;
+  animation: wave 1.2s ease-in-out infinite;
+}
+.voice-wave span:nth-child(2) { animation-delay: 0.1s; }
+.voice-wave span:nth-child(3) { animation-delay: 0.2s; }
+.voice-wave span:nth-child(4) { animation-delay: 0.3s; }
+.voice-wave span:nth-child(5) { animation-delay: 0.4s; }
+
+/* ── Typing Cursor ──────────────────────────────────────── */
+.typing-cursor::after {
+  content: '|';
+  animation: blink 1s step-end infinite;
+  color: var(--brand-secondary);
+  margin-left: 2px;
+}
+
+/* ── Number Counter ─────────────────────────────────────── */
+.counter-animate {
+  animation: countUp 0.5s var(--ease-out) both;
+}
+
+/* ── Ripple Effect ──────────────────────────────────────── */
+.ripple-wrap { position: relative; overflow: hidden; }
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.3);
+  pointer-events: none;
+  transform: scale(0);
+  animation: rippleAnim 0.6s linear;
+}
+@keyframes rippleAnim {
+  to { transform: scale(4); opacity: 0; }
+}
+
+/* ── Page Transition ─────────────────────────────────────── */
+.page-enter {
+  animation: fadeIn 0.4s var(--ease-out);
+}
+.page-exit {
+  animation: fadeIn 0.3s var(--ease-in) reverse;
+}
+
+/* ── Particle Canvas Animation ───────────────────────────── */
+.hero-particles { opacity: 0.6; }
+
+/* ── Hover Lift ─────────────────────────────────────────── */
+.hover-lift {
+  transition: transform var(--dur-normal) var(--ease-spring),
+              box-shadow var(--dur-normal) var(--ease-out);
+}
+.hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* ── Magnetic Button Effect ─────────────────────────────── */
+.magnetic-btn { transition: transform 0.15s var(--ease-out); }
+
+/* ── Spin ────────────────────────────────────────────────── */
+.spin { animation: spinOnce 1s var(--ease-inout); }
+.spin-infinite { animation: spinOnce 2s linear infinite; }
+
+/* ── Progress Bar ───────────────────────────────────────── */
+.progress-bar-anim {
+  animation: progressFill 1.5s var(--ease-out) both;
+}
+@keyframes progressFill {
+  from { width: 0; }
+}
+
+/* ── Card Reveal ─────────────────────────────────────────── */
+@keyframes cardReveal {
+  0% { opacity: 0; clip-path: inset(0 100% 0 0); }
+  100% { opacity: 1; clip-path: inset(0 0 0 0); }
+}
+.card-reveal { animation: cardReveal 0.5s var(--ease-out) both; }
+
+/* ── Notification bounce ─────────────────────────────────── */
+@keyframes notifBounce {
+  0%, 100% { transform: scale(1); }
+  25% { transform: scale(1.2); }
+  50% { transform: scale(0.9); }
+  75% { transform: scale(1.05); }
+}
+.notif-bounce { animation: notifBounce 0.5s var(--ease-spring); }
+
+/* ── Stagger Grid Items ──────────────────────────────────── */
+.stagger-children > * {
+  opacity: 0;
+  transform: translateY(20px);
+}
+.stagger-children.visible > *:nth-child(1) { animation: fadeUp 0.5s 0.05s var(--ease-out) forwards; }
+.stagger-children.visible > *:nth-child(2) { animation: fadeUp 0.5s 0.1s var(--ease-out) forwards; }
+.stagger-children.visible > *:nth-child(3) { animation: fadeUp 0.5s 0.15s var(--ease-out) forwards; }
+.stagger-children.visible > *:nth-child(4) { animation: fadeUp 0.5s 0.2s var(--ease-out) forwards; }
+.stagger-children.visible > *:nth-child(5) { animation: fadeUp 0.5s 0.25s var(--ease-out) forwards; }
+.stagger-children.visible > *:nth-child(6) { animation: fadeUp 0.5s 0.3s var(--ease-out) forwards; }
+.stagger-children.visible > *:nth-child(7) { animation: fadeUp 0.5s 0.35s var(--ease-out) forwards; }
+.stagger-children.visible > *:nth-child(8) { animation: fadeUp 0.5s 0.4s var(--ease-out) forwards; }
+
+/* ── Reduced Motion ──────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   RESPONSIVE DESIGN SYSTEM
+═══════════════════════════════════════════════════════════ */
+
+/* ── Tablet (≤1024px) ──────────────────────────────────── */
+@media (max-width: 1024px) {
+  .hero-content {
+    grid-template-columns: 1fr;
+    text-align: center;
+    padding-top: var(--space-12);
+  }
+  .hero-visual { display: none; }
+  .hero-subtext { max-width: 100%; }
+  .hero-badge { margin: 0 auto; }
+  .hero-cta { justify-content: center; }
+  .hero-search-inner { flex-wrap: wrap; }
+
+  .categories-grid { grid-template-columns: repeat(4, 1fr); }
+  .why-grid { grid-template-columns: repeat(2, 1fr); }
+  .eco-cards-grid { grid-template-columns: 1fr; }
+  .ai-content-grid { grid-template-columns: 1fr; gap: var(--space-8); }
+  .stories-grid { grid-template-columns: 1fr; }
+  .pricing-grid { grid-template-columns: 1fr; }
+  .pricing-card.featured { transform: none; }
+  .contact-grid { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: var(--space-8); }
+  .footer-brand { grid-column: 1 / -1; max-width: 100%; }
+  .ecosystem-diagram { display: none; }
+  .products-grid { grid-template-columns: repeat(2, 1fr); }
+  .quick-view-content { grid-template-columns: 1fr; }
+  .qv-img { border-radius: var(--radius-2xl) var(--radius-2xl) 0 0; }
+  .qv-img .product-img-thumb { min-height: 200px; }
+  .form-row { grid-template-columns: 1fr; }
+}
+
+/* ── Mobile (≤768px) ───────────────────────────────────── */
+@media (max-width: 768px) {
+  :root {
+    --container-pad: 1rem;
+    --header-height: 60px;
+    --nav-height: 0px;
+  }
+
+  .site-header .header-search { display: none; }
+  .header-nav { display: none; }
+  .mobile-menu-btn { display: flex; }
+  .lang-btn, .notif-btn { display: none; }
+
+  .hero-headline { font-size: clamp(2.5rem, 8vw, 4rem); }
+  .hero-stats-inner { gap: 0; flex-wrap: wrap; }
+  .stat-item { padding: var(--space-3) var(--space-4); flex: 1; min-width: 50%; }
+  .stat-divider { display: none; }
+
+  .categories-grid { grid-template-columns: repeat(4, 1fr); gap: var(--space-3); }
+  .category-card { padding: var(--space-4) var(--space-2); }
+  .cat-icon { font-size: 1.8rem; }
+
+  .why-grid { grid-template-columns: 1fr; }
+  .stories-grid { grid-template-columns: 1fr; }
+  .pricing-grid { grid-template-columns: 1fr; }
+  .products-grid { grid-template-columns: repeat(2, 1fr); gap: var(--space-3); }
+
+  .ai-chat-panel { width: calc(100vw - 2rem); right: -1rem; }
+  .ai-chat-widget { right: var(--space-4); bottom: var(--space-4); }
+
+  .section-title { font-size: var(--text-3xl); }
+  .section-header { margin-bottom: var(--space-8); }
+  .mega-menu { display: none; }
+  .footer-grid { grid-template-columns: 1fr; }
+  .footer-bottom-inner { flex-direction: column; text-align: center; }
+  .location-bar-inner { flex-direction: column; align-items: flex-start; gap: var(--space-3); }
+  .location-districts { width: 100%; }
+
+  .stories-grid, .eco-cards-grid { grid-template-columns: 1fr; }
+  .testimonial-card { padding: var(--space-6); }
+  .pricing-card.featured { transform: none; }
+}
+
+/* ── Small Mobile (≤480px) ─────────────────────────────── */
+@media (max-width: 480px) {
+  .hero-cta { flex-direction: column; align-items: stretch; }
+  .hero-cta .btn { justify-content: center; }
+  .categories-grid { grid-template-columns: repeat(4, 1fr); }
+  .category-card h3, .cat-count { display: none; }
+  .products-grid { grid-template-columns: 1fr; }
+  .stat-item { min-width: 50%; }
+  .mega-menu-inner { grid-template-columns: 1fr 1fr; }
+  .ai-chat-panel { width: calc(100vw - 1rem); }
+}
