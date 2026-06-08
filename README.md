@@ -1,6 +1,6 @@
-# OSMART 🚀
+# OSMARTA 🚀
 
-OSMART is an AI-Powered Digital Commerce Ecosystem that bridges the gap between Tamil Nadu's local commerce and global technology. It connects buyers directly with farmers, retailers, and service providers with **0% commission** and **No middlemen**.
+OSMARTA is an AI-Powered Digital Commerce Ecosystem that bridges the gap between Tamil Nadu's local commerce and global technology. It connects buyers directly with farmers, retailers, and service providers with **0% commission** and **No middlemen**.
 
 ## 🏗️ Architecture (V2)
 
