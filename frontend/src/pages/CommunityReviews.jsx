@@ -3,7 +3,6 @@ import { supabase } from '../lib/supabase';
 
 export default function CommunityReviews() {
   const [reviews, setReviews] = useState([]);
-  const [reviews, setReviews] = useState([]);
   const [allListings, setAllListings] = useState([]);
   const [loading, setLoading] = useState(true);
 
