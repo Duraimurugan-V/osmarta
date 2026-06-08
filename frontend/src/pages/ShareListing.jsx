@@ -6,6 +6,7 @@ export default function ShareListing() {
   const [desc, setDesc] = useState('');
   const [price, setPrice] = useState('');
   const [category, setCategory] = useState('product');
+  const [subCategory, setSubCategory] = useState('Electronics');
   const [stockInfo, setStockInfo] = useState('');
   const [availabilityTime, setAvailabilityTime] = useState('');
   const [imageUrl, setImageUrl] = useState('');
@@ -13,9 +14,22 @@ export default function ShareListing() {
   const [contactWhatsapp, setContactWhatsapp] = useState('');
   const [user, setUser] = useState(null);
 
+  const subCategories = {
+    product: ['Electronics', 'Clothing', 'Home Goods', 'Handicrafts', 'Other'],
+    farm: ['Vegetables', 'Fruits', 'Grains', 'Spices', 'Other'],
+    food: ['Catering', 'Homemade Snacks', 'Restaurant', 'Bakery', 'Other'],
+    service: ['Plumbing', 'Electrical', 'Tutoring', 'Cleaning', 'Other']
+  };
+
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => setUser(data?.user));
   }, []);
+
+  useEffect(() => {
+    if (subCategories[category]) {
+      setSubCategory(subCategories[category][0]);
+    }
+  }, [category]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -26,7 +40,7 @@ export default function ShareListing() {
     const payload = { 
       seller_id: user.id, 
       title, 
-      description: desc, 
+      description: `[${subCategory}] ${desc}`, 
       price: parseFloat(price), 
       category,
       image_url: imageUrl,
@@ -58,6 +72,15 @@ export default function ShareListing() {
             <option value="farm">🥬 Farm Produce</option>
             <option value="food">🍛 Food</option>
             <option value="service">🔧 Service</option>
+          </select>
+        </div>
+
+        <div style={{ marginBottom: 'var(--space-4)' }}>
+          <label style={{ display: 'block', marginBottom: 'var(--space-2)' }}>Sub-Category</label>
+          <select value={subCategory} onChange={e => setSubCategory(e.target.value)} style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', background: 'var(--bg-elevated)', border: '1px solid var(--border-default)', color: 'white' }}>
+            {subCategories[category].map(sub => (
+              <option key={sub} value={sub}>{sub}</option>
+            ))}
           </select>
         </div>
 

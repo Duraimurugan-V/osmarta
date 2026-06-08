@@ -41,5 +41,10 @@ def get_insights():
             "Demand for Organic Mangoes is expected to rise by 25% next week.",
             "Local services in Madurai are experiencing peak booking hours from 4 PM - 7 PM.",
             "Handloom silk products are trending among users in Chennai."
+        ],
+        "trending_products": [
+            {"name": "Coimbatore Wet Grinder", "sales": 450, "trend": "+12%"},
+            {"name": "Organic Turmeric Powder", "sales": 320, "trend": "+8%"},
+            {"name": "Kanchipuram Silk Sarees", "sales": 150, "trend": "+22%"}
         ]
     }

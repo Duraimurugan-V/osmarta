@@ -4,6 +4,7 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
 export default function AIFeatures() {
   const [insights, setInsights] = useState([]);
+  const [trending, setTrending] = useState([]);
   const [prediction, setPrediction] = useState(null);
   const [productName, setProductName] = useState('');
   const [category, setCategory] = useState('farm');
@@ -12,7 +13,10 @@ export default function AIFeatures() {
   useEffect(() => {
     fetch(`${API_URL}/api/ai/insights`)
       .then(res => res.json())
-      .then(data => setInsights(data.insights))
+      .then(data => {
+        setInsights(data.insights);
+        setTrending(data.trending_products || []);
+      })
       .catch(err => console.error("Could not load insights:", err));
   }, []);
 
@@ -81,7 +85,27 @@ export default function AIFeatures() {
             </ul>
           )}
         </div>
+        </div>
       </div>
+
+      {/* Trending Products Row */}
+      {trending.length > 0 && (
+        <div style={{ marginTop: 'var(--space-8)' }}>
+          <h2 style={{ marginBottom: 'var(--space-4)' }}>🔥 Trending / Top Sale Products</h2>
+          <div style={{ display: 'grid', gap: 'var(--space-4)', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))' }}>
+            {trending.map((t, idx) => (
+              <div key={idx} style={{ background: 'var(--bg-card)', padding: 'var(--space-5)', borderRadius: 'var(--radius-xl)', border: '1px solid var(--border-brand)', display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}>
+                <h4 style={{ margin: 0 }}>{t.name}</h4>
+                <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
+                  <span>{t.sales} Sales</span>
+                  <span style={{ color: '#10b981', fontWeight: 600 }}>{t.trend}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }

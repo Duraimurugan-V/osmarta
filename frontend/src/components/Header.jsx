@@ -27,9 +27,11 @@ export default function Header() {
   const toggleTheme = () => setTheme(prev => prev === 'dark' ? 'light' : 'dark');
 
   const handleLogin = async () => {
-    await supabase.auth.signInWithOAuth({
-      provider: 'google',
-    });
+    const email = prompt("Google Auth is disabled. Please enter your email to receive a secure login link:");
+    if (!email) return;
+    const { error } = await supabase.auth.signInWithOtp({ email });
+    if (error) alert("Error: " + error.message);
+    else alert("Success! Check your email for the magic login link.");
   };
 
   const handleLogout = async () => {

@@ -3,6 +3,8 @@ import { supabase } from '../lib/supabase';
 
 export default function CommunityReviews() {
   const [reviews, setReviews] = useState([]);
+  const [reviews, setReviews] = useState([]);
+  const [allListings, setAllListings] = useState([]);
   const [loading, setLoading] = useState(true);
 
   // New review form
@@ -13,11 +15,18 @@ export default function CommunityReviews() {
   const [contactDetails, setContactDetails] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const [user, setUser] = useState(null);
+  const [selectedListingId, setSelectedListingId] = useState('');
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => setUser(data?.user));
     loadReviews();
+    loadListings();
   }, []);
+
+  async function loadListings() {
+    const { data } = await supabase.from('listings').select('id, title, category');
+    if (data) setAllListings(data);
+  }
 
   async function loadReviews() {
     setLoading(true);
@@ -42,6 +51,7 @@ export default function CommunityReviews() {
     
     const payload = {
       reviewer_id: user.id, 
+      listing_id: reviewType === 'platform' && selectedListingId ? selectedListingId : null,
       rating: parseInt(rating), 
       review_text: text,
       review_type: reviewType,
@@ -83,6 +93,18 @@ export default function CommunityReviews() {
               <input type="number" min="1" max="5" value={rating} onChange={(e) => setRating(e.target.value)} style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', background: 'var(--bg-elevated)', border: '1px solid var(--border-default)', color: 'white' }} />
             </div>
           </div>
+
+          {reviewType === 'platform' && (
+            <div style={{ marginBottom: 'var(--space-4)' }}>
+              <label style={{ display: 'block', marginBottom: 'var(--space-2)' }}>Select Product/Service to Review</label>
+              <select value={selectedListingId} onChange={e => setSelectedListingId(e.target.value)} style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', background: 'var(--bg-elevated)', border: '1px solid var(--border-default)', color: 'white' }}>
+                <option value="">-- Choose a Listing --</option>
+                {allListings.map(l => (
+                  <option key={l.id} value={l.id}>{l.title} ({l.category})</option>
+                ))}
+              </select>
+            </div>
+          )}
 
           <div style={{ marginBottom: 'var(--space-4)' }}>
             <label style={{ display: 'block', marginBottom: 'var(--space-2)' }}>Review Text</label>

@@ -6,6 +6,8 @@ export default function Products() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all');
+  const [search, setSearch] = useState('');
+  const [maxPrice, setMaxPrice] = useState('');
 
   useEffect(() => {
     async function loadProducts() {
@@ -14,6 +16,12 @@ export default function Products() {
       
       if (filter !== 'all') {
         query = query.eq('category', filter);
+      }
+      if (search) {
+        query = query.ilike('title', `%${search}%`);
+      }
+      if (maxPrice) {
+        query = query.lte('price', parseFloat(maxPrice));
       }
       
       const { data, error } = await query.order('created_at', { ascending: false });
@@ -31,13 +39,30 @@ export default function Products() {
       
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--space-6)', flexWrap: 'wrap', gap: '1rem' }}>
         <h1 style={{ margin: 0 }}>Marketplace Directory</h1>
-        <select value={filter} onChange={e => setFilter(e.target.value)} style={{ padding: '0.75rem 1.5rem', borderRadius: 'var(--radius-full)', background: 'var(--bg-elevated)', border: '1px solid var(--border-brand)', color: 'white', fontWeight: 600, cursor: 'pointer' }}>
-          <option value="all">🌐 All Listings</option>
-          <option value="product">🛍️ Products</option>
-          <option value="farm">🥬 Farm Produce</option>
-          <option value="food">🍛 Food & Catering</option>
-          <option value="service">🔧 Services</option>
-        </select>
+        
+        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', width: '100%' }}>
+          <input 
+            type="text" 
+            placeholder="Search products..." 
+            value={search} 
+            onChange={e => setSearch(e.target.value)} 
+            style={{ flex: 2, padding: '0.75rem', borderRadius: 'var(--radius-md)', background: 'var(--bg-elevated)', border: '1px solid var(--border-default)', color: 'white' }} 
+          />
+          <input 
+            type="number" 
+            placeholder="Max Price (₹)" 
+            value={maxPrice} 
+            onChange={e => setMaxPrice(e.target.value)} 
+            style={{ flex: 1, padding: '0.75rem', borderRadius: 'var(--radius-md)', background: 'var(--bg-elevated)', border: '1px solid var(--border-default)', color: 'white' }} 
+          />
+          <select value={filter} onChange={e => setFilter(e.target.value)} style={{ flex: 1, padding: '0.75rem', borderRadius: 'var(--radius-md)', background: 'var(--bg-elevated)', border: '1px solid var(--border-brand)', color: 'white', fontWeight: 600, cursor: 'pointer' }}>
+            <option value="all">🌐 All Listings</option>
+            <option value="product">🛍️ Products</option>
+            <option value="farm">🥬 Farm Produce</option>
+            <option value="food">🍛 Food & Catering</option>
+            <option value="service">🔧 Services</option>
+          </select>
+        </div>
       </div>
 
       {loading ? (
