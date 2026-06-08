@@ -26,14 +26,6 @@ export default function Header() {
 
   const toggleTheme = () => setTheme(prev => prev === 'dark' ? 'light' : 'dark');
 
-  const handleLogin = async () => {
-    const email = prompt("Google Auth is disabled. Please enter your email to receive a secure login link:");
-    if (!email) return;
-    const { error } = await supabase.auth.signInWithOtp({ email });
-    if (error) alert("Error: " + error.message);
-    else alert("Success! Check your email for the magic login link.");
-  };
-
   const handleLogout = async () => {
     await supabase.auth.signOut();
   };
@@ -62,9 +54,9 @@ export default function Header() {
               <button onClick={handleLogout} className="btn btn-outline btn-sm">Log Out</button>
             </div>
           ) : (
-            <button onClick={handleLogin} className="btn btn-primary btn-sm" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <Link to="/auth" className="btn btn-primary btn-sm" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', textDecoration: 'none' }}>
               <LogIn size={16} /> Sign In
-            </button>
+            </Link>
           )}
         </div>
       </div>
