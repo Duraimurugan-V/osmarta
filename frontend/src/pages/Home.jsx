@@ -224,7 +224,7 @@ export default function Home() {
       <footer style={{ background: '#0a0a14', padding: 'var(--space-12) 0 var(--space-6)', borderTop: '1px solid var(--border-default)' }}>
         <div className="container" style={{ textAlign: 'center' }}>
           <h2 style={{ fontFamily: 'Space Grotesk', fontWeight: 800, fontSize: '2rem', marginBottom: 'var(--space-2)' }}>
-            OS<span style={{ color: '#10b981' }}>MART</span>
+            OS<span style={{ color: '#10b981' }}>MARTA</span>
           </h2>
           <p style={{ color: 'var(--text-secondary)', maxWidth: '500px', margin: '0 auto var(--space-6)' }}>
             AI-Powered Digital Commerce Ecosystem. Connecting Tamil Nadu's commerce with global technology.
@@ -232,6 +232,16 @@ export default function Home() {
           <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: 'var(--text-primary)' }}>
             📞 +91 9843602332
           </div>
+          
+          <div style={{ display: 'flex', justifyContent: 'center', gap: 'var(--space-4)', marginTop: 'var(--space-6)' }}>
+            <a href="https://www.linkedin.com/company/osmarta" target="_blank" rel="noreferrer" style={{ color: 'var(--brand-primary)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 'bold' }}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+              </svg>
+              Follow us on LinkedIn
+            </a>
+          </div>
+
           <div style={{ marginTop: 'var(--space-10)', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: 'var(--space-6)', color: 'var(--text-muted)', fontSize: '0.85rem' }}>
             &copy; 2026 OSMARTA. All rights reserved.
           </div>
