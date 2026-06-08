@@ -107,7 +107,7 @@ export default function CommunityReviews() {
 
           <div style={{ marginBottom: 'var(--space-4)' }}>
             <label style={{ display: 'block', marginBottom: 'var(--space-2)' }}>Review Text</label>
-            <textarea value={text} onChange={(e) => setText(e.target.value)} required style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', minHeight: '80px', background: 'var(--bg-elevated)', border: '1px solid var(--border-default)', color: 'white' }} placeholder={reviewType === 'personal' ? "Share your personal experience with OSMART..." : "Tell us about the product/service..."} />
+            <textarea value={text} onChange={(e) => setText(e.target.value)} required style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', minHeight: '80px', background: 'var(--bg-elevated)', border: '1px solid var(--border-default)', color: 'white' }} placeholder={reviewType === 'personal' ? "Share your personal experience with OSMARTA..." : "Tell us about the product/service..."} />
           </div>
 
           <div style={{ marginBottom: 'var(--space-4)', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-4)' }}>

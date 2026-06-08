@@ -77,7 +77,7 @@ export default function Home() {
       <section style={{ padding: 'var(--space-12) 0', background: 'var(--bg-elevated)' }}>
         <div className="container">
           <div style={{ textAlign: 'center', marginBottom: 'var(--space-10)' }}>
-            <h2 style={{ fontSize: '2.5rem', marginBottom: 'var(--space-4)' }}>How OSMART Works</h2>
+            <h2 style={{ fontSize: '2.5rem', marginBottom: 'var(--space-4)' }}>How OSMARTA Works</h2>
             <p style={{ color: 'var(--text-secondary)' }}>A transparent ecosystem designed for fair trade.</p>
           </div>
           
@@ -111,18 +111,18 @@ export default function Home() {
           
           <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
             {[
-              "What is OSMART and how does it work?",
-              "Is OSMART free to use for customers?",
-              "How do farmers benefit from OSMART?",
+              "What is OSMARTA and how does it work?",
+              "Is OSMARTA free to use for customers?",
+              "How do farmers benefit from OSMARTA?",
               "How does the AI recommendation system work?",
-              "Is my data safe on OSMART?"
+              "Is my data safe on OSMARTA?"
             ].map((q, idx) => (
               <details key={idx} style={{ background: 'var(--bg-card)', padding: 'var(--space-5)', borderRadius: 'var(--radius-xl)', border: '1px solid var(--border-default)', cursor: 'pointer' }}>
                 <summary style={{ fontWeight: 600, fontSize: '1.1rem', color: 'var(--text-primary)', listStyle: 'none', display: 'flex', justifyContent: 'space-between' }}>
                   {q} <span>+</span>
                 </summary>
                 <p style={{ color: 'var(--text-secondary)', marginTop: 'var(--space-4)', lineHeight: 1.6 }}>
-                  Our team is actively updating this information. OSMART is a direct connection ecosystem eliminating middlemen and using AI to forecast demand.
+                  Our team is actively updating this information. OSMARTA is a direct connection ecosystem eliminating middlemen and using AI to forecast demand.
                 </p>
               </details>
             ))}
@@ -155,7 +155,7 @@ export default function Home() {
                 <div style={{ fontSize: '1.5rem', background: 'var(--glass-bg)', padding: '12px', borderRadius: '50%' }}>📧</div>
                 <div>
                   <div style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>Email</div>
-                  <div style={{ fontWeight: 600 }}>supportosmarta@gmail.com</div>
+                  <div style={{ fontWeight: 600 }}>supportosmartaa@gmail.com</div>
                 </div>
               </div>
 
@@ -233,7 +233,7 @@ export default function Home() {
             📞 +91 9843602332
           </div>
           <div style={{ marginTop: 'var(--space-10)', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: 'var(--space-6)', color: 'var(--text-muted)', fontSize: '0.85rem' }}>
-            &copy; 2026 OSMART. All rights reserved.
+            &copy; 2026 OSMARTA. All rights reserved.
           </div>
         </div>
       </footer>

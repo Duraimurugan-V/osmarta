@@ -1,4 +1,4 @@
--- Supabase Schema for OSMART
+-- Supabase Schema for OSMARTA
 
 -- Create custom enum for user types
 CREATE TYPE user_role AS ENUM ('farmer', 'retailer', 'customer');
