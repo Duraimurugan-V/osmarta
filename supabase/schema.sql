@@ -48,6 +48,8 @@ CREATE TABLE listings (
   stock_info TEXT,
   availability_time TEXT,
   image_url TEXT,
+  image_urls TEXT[],
+  location_link TEXT,
   contact_phone TEXT,
   contact_whatsapp TEXT,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL

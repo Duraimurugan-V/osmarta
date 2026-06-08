@@ -9,7 +9,8 @@ export default function ShareListing() {
   const [subCategory, setSubCategory] = useState('Electronics');
   const [stockInfo, setStockInfo] = useState('');
   const [availabilityTime, setAvailabilityTime] = useState('');
-  const [imageUrl, setImageUrl] = useState('');
+  const [imageUrls, setImageUrls] = useState(['', '', '', '']);
+  const [locationLink, setLocationLink] = useState('');
   const [contactPhone, setContactPhone] = useState('');
   const [contactWhatsapp, setContactWhatsapp] = useState('');
   const [user, setUser] = useState(null);
@@ -37,13 +38,16 @@ export default function ShareListing() {
       alert("Please sign in first!");
       return;
     }
+    const filteredUrls = imageUrls.filter(u => u.trim() !== '');
     const payload = { 
       seller_id: user.id, 
       title, 
       description: `[${subCategory}] ${desc}`, 
       price: parseFloat(price), 
       category,
-      image_url: imageUrl,
+      image_url: filteredUrls.length > 0 ? filteredUrls[0] : null,
+      image_urls: filteredUrls,
+      location_link: locationLink,
       contact_phone: contactPhone,
       contact_whatsapp: contactWhatsapp,
       stock_info: category === 'service' ? null : stockInfo,
@@ -56,7 +60,7 @@ export default function ShareListing() {
     } else {
       alert("Listing published successfully!");
       setTitle(''); setDesc(''); setPrice(''); setStockInfo(''); setAvailabilityTime('');
-      setImageUrl(''); setContactPhone(''); setContactWhatsapp('');
+      setImageUrls(['', '', '', '']); setLocationLink(''); setContactPhone(''); setContactWhatsapp('');
     }
   };
 
@@ -112,8 +116,21 @@ export default function ShareListing() {
             <input required type="number" value={price} onChange={e => setPrice(e.target.value)} style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', background: 'var(--bg-elevated)', border: '1px solid var(--border-default)', color: 'white' }} placeholder="999" />
           </div>
           <div>
-            <label style={{ display: 'block', marginBottom: 'var(--space-2)' }}>Image URL (Optional)</label>
-            <input type="text" value={imageUrl} onChange={e => setImageUrl(e.target.value)} style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', background: 'var(--bg-elevated)', border: '1px solid var(--border-default)', color: 'white' }} placeholder="https://..." />
+            <label style={{ display: 'block', marginBottom: 'var(--space-2)' }}>Location Link (e.g. Google Maps)</label>
+            <input type="url" value={locationLink} onChange={e => setLocationLink(e.target.value)} style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', background: 'var(--bg-elevated)', border: '1px solid var(--border-default)', color: 'white' }} placeholder="https://maps.app.goo.gl/..." />
+          </div>
+        </div>
+
+        <div style={{ marginBottom: 'var(--space-4)' }}>
+          <label style={{ display: 'block', marginBottom: 'var(--space-2)' }}>Image URLs (Max 4, Optional)</label>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            {imageUrls.map((url, i) => (
+              <input key={i} type="url" value={url} onChange={e => {
+                const newUrls = [...imageUrls];
+                newUrls[i] = e.target.value;
+                setImageUrls(newUrls);
+              }} style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', background: 'var(--bg-elevated)', border: '1px solid var(--border-default)', color: 'white' }} placeholder={`Image ${i+1} URL (https://...)`} />
+            ))}
           </div>
         </div>
 

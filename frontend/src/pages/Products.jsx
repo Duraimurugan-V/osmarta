@@ -9,6 +9,26 @@ export default function Products() {
   const [search, setSearch] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
 
+  const handleEnquire = async (listingId, sellerId) => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      alert("Please sign in to send an enquiry.");
+      return;
+    }
+    const message = prompt("Enter your enquiry message for the seller:");
+    if (!message) return;
+
+    const { error } = await supabase.from('inquiries').insert([{
+      listing_id: listingId,
+      buyer_id: user.id,
+      seller_id: sellerId,
+      message: message
+    }]);
+
+    if (error) alert("Error sending enquiry: " + error.message);
+    else alert("Enquiry sent successfully! The seller will review it in their Owner Inbox.");
+  };
+
   useEffect(() => {
     async function loadProducts() {
       setLoading(true);
@@ -78,9 +98,11 @@ export default function Products() {
           {products.map(p => (
             <div key={p.id} className="card" style={{ background: 'var(--bg-card)', padding: 'var(--space-5)', borderRadius: 'var(--radius-2xl)', border: '1px solid var(--border-default)', display: 'flex', flexDirection: 'column' }}>
               
-              {p.image_url && (
-                <div style={{ marginBottom: '1rem', borderRadius: 'var(--radius-xl)', overflow: 'hidden', height: '180px' }}>
-                  <img src={p.image_url} alt={p.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              {(p.image_urls?.length > 0 || p.image_url) && (
+                <div style={{ marginBottom: '1rem', borderRadius: 'var(--radius-xl)', overflowX: 'auto', display: 'flex', gap: '8px', scrollSnapType: 'x mandatory' }}>
+                  {(p.image_urls?.length > 0 ? p.image_urls : [p.image_url]).map((url, idx) => (
+                    <img key={idx} src={url} alt={p.title} style={{ width: '100%', height: '180px', objectFit: 'cover', flexShrink: 0, scrollSnapAlign: 'start', borderRadius: 'var(--radius-md)' }} />
+                  ))}
                 </div>
               )}
 
@@ -112,18 +134,19 @@ export default function Products() {
                   </span>
                   <strong style={{ color: 'var(--text-primary)' }}>{p.profiles?.full_name || 'Anonymous Seller'}</strong>
                 </div>
-                <div style={{ marginBottom: '12px' }}>📍 {p.profiles?.location_area || 'Local Area'}</div>
+                <div style={{ marginBottom: '12px', display: 'flex', justifyContent: 'space-between' }}>
+                  <span>📍 {p.profiles?.location_area || 'Local Area'}</span>
+                  {p.location_link && <a href={p.location_link} target="_blank" rel="noreferrer" style={{ color: '#06b6d4', fontSize: '0.85rem', textDecoration: 'none', fontWeight: 600 }}>🗺️ View Map</a>}
+                </div>
                 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
                   {(p.contact_phone || p.profiles?.phone_number) && (
-                    <a href={`tel:${p.contact_phone || p.profiles.phone_number}`} className="btn btn-sm" style={{ background: 'linear-gradient(135deg,#059669,#10b981)', color: 'white', padding: '8px', textAlign: 'center', borderRadius: '8px' }}>📞 Call</a>
+                    <a href={`tel:${p.contact_phone || p.profiles.phone_number}`} className="btn btn-sm" style={{ background: 'linear-gradient(135deg,#059669,#10b981)', color: 'white', padding: '8px', textAlign: 'center', borderRadius: '8px', textDecoration: 'none' }}>📞 Call</a>
                   )}
                   {(p.contact_whatsapp || p.profiles?.whatsapp_number) && (
-                    <a href={`https://wa.me/${p.contact_whatsapp || p.profiles.whatsapp_number}`} target="_blank" rel="noreferrer" className="btn btn-sm" style={{ background: 'linear-gradient(135deg,#16a34a,#22c55e)', color: 'white', padding: '8px', textAlign: 'center', borderRadius: '8px' }}>💬 WhatsApp</a>
+                    <a href={`https://wa.me/${p.contact_whatsapp || p.profiles.whatsapp_number}`} target="_blank" rel="noreferrer" className="btn btn-sm" style={{ background: 'linear-gradient(135deg,#16a34a,#22c55e)', color: 'white', padding: '8px', textAlign: 'center', borderRadius: '8px', textDecoration: 'none' }}>💬 WhatsApp</a>
                   )}
-                  {!p.contact_phone && !p.contact_whatsapp && !p.profiles?.phone_number && (
-                    <button className="btn btn-sm btn-outline" style={{ gridColumn: 'span 2' }}>📨 Send Request</button>
-                  )}
+                  <button onClick={() => handleEnquire(p.id, p.seller_id)} className="btn btn-sm btn-outline" style={{ gridColumn: 'span 2' }}>📨 Enquire Now</button>
                 </div>
               </div>
 
