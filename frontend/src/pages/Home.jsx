@@ -223,9 +223,9 @@ export default function Home() {
       {/* ── FOOTER ── */}
       <footer style={{ background: '#0a0a14', padding: 'var(--space-12) 0 var(--space-6)', borderTop: '1px solid var(--border-default)' }}>
         <div className="container" style={{ textAlign: 'center' }}>
-          <h2 style={{ fontFamily: 'Space Grotesk', fontWeight: 800, fontSize: '2rem', marginBottom: 'var(--space-2)' }}>
-            OS<span style={{ color: '#10b981' }}>MARTA</span>
-          </h2>
+          <div style={{ marginBottom: 'var(--space-4)' }}>
+            <img src="/logo.jpg" alt="OSMARTA" style={{ height: '60px', width: 'auto', borderRadius: '12px' }} />
+          </div>
           <p style={{ color: 'var(--text-secondary)', maxWidth: '500px', margin: '0 auto var(--space-6)' }}>
             AI-Powered Digital Commerce Ecosystem. Connecting Tamil Nadu's commerce with global technology.
           </p>

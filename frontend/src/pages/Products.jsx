@@ -9,26 +9,6 @@ export default function Products() {
   const [search, setSearch] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
 
-  const handleEnquire = async (listingId, sellerId) => {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
-      alert("Please sign in to send an enquiry.");
-      return;
-    }
-    const message = prompt("Enter your enquiry message for the seller:");
-    if (!message) return;
-
-    const { error } = await supabase.from('inquiries').insert([{
-      listing_id: listingId,
-      buyer_id: user.id,
-      seller_id: sellerId,
-      message: message
-    }]);
-
-    if (error) alert("Error sending enquiry: " + error.message);
-    else alert("Enquiry sent successfully! The seller will review it in their Owner Inbox.");
-  };
-
   useEffect(() => {
     async function loadProducts() {
       setLoading(true);
@@ -113,7 +93,9 @@ export default function Products() {
                 </span>
               </div>
               
-              <p style={{ color: 'var(--text-secondary)', marginBottom: 'var(--space-4)', flex: 1 }}>{p.description}</p>
+              <p style={{ color: 'var(--text-secondary)', marginBottom: 'var(--space-4)', flex: 1, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
+                {p.description}
+              </p>
               
               <div style={{ background: 'var(--bg-elevated)', padding: '0.75rem', borderRadius: 'var(--radius-md)', marginBottom: 'var(--space-4)' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
@@ -134,9 +116,16 @@ export default function Products() {
                   </span>
                   <strong style={{ color: 'var(--text-primary)' }}>{p.profiles?.full_name || 'Anonymous Seller'}</strong>
                 </div>
-                <div style={{ marginBottom: '12px', display: 'flex', justifyContent: 'space-between' }}>
-                  <span>📍 {p.profiles?.location_area || 'Local Area'}</span>
-                  {p.location_link && <a href={p.location_link} target="_blank" rel="noreferrer" style={{ color: '#06b6d4', fontSize: '0.85rem', textDecoration: 'none', fontWeight: 600 }}>🗺️ View Map</a>}
+                <div style={{ marginBottom: '12px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                    <span>📍 {p.profiles?.location_area || 'Local Area'}</span>
+                    <Link to={`/product/${p.id}`} className="btn btn-sm btn-outline" style={{ padding: '4px 10px', fontSize: '0.8rem', textDecoration: 'none' }}>See More</Link>
+                  </div>
+                  {p.location_link && (
+                    <a href={p.location_link} target="_blank" rel="noreferrer" className="btn btn-sm" style={{ display: 'block', textAlign: 'center', background: 'rgba(6,182,212,0.1)', color: '#06b6d4', border: '1px solid rgba(6,182,212,0.3)', textDecoration: 'none', marginBottom: '8px' }}>
+                      🗺️ View Location on Map
+                    </a>
+                  )}
                 </div>
                 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
@@ -146,7 +135,6 @@ export default function Products() {
                   {(p.contact_whatsapp || p.profiles?.whatsapp_number) && (
                     <a href={`https://wa.me/${p.contact_whatsapp || p.profiles.whatsapp_number}`} target="_blank" rel="noreferrer" className="btn btn-sm" style={{ background: 'linear-gradient(135deg,#16a34a,#22c55e)', color: 'white', padding: '8px', textAlign: 'center', borderRadius: '8px', textDecoration: 'none' }}>💬 WhatsApp</a>
                   )}
-                  <button onClick={() => handleEnquire(p.id, p.seller_id)} className="btn btn-sm btn-outline" style={{ gridColumn: 'span 2' }}>📨 Enquire Now</button>
                 </div>
               </div>
 

@@ -3,8 +3,10 @@ import { supabase } from '../lib/supabase';
 
 export default function OwnerInbox() {
   const [inquiries, setInquiries] = useState([]);
+  const [sentInquiries, setSentInquiries] = useState([]);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
+  const [tab, setTab] = useState('received'); // 'received' or 'sent'
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
@@ -17,21 +19,34 @@ export default function OwnerInbox() {
     });
   }, []);
 
-  async function loadInquiries(sellerId) {
+  async function loadInquiries(userId) {
     setLoading(true);
-    const { data, error } = await supabase
+    // Received
+    const { data: recData } = await supabase
       .from('inquiries')
       .select(`
         *,
         buyer:buyer_id (full_name, location_area, phone_number),
         listings:listing_id (title)
       `)
-      .eq('seller_id', sellerId)
+      .eq('seller_id', userId)
       .order('created_at', { ascending: false });
 
-    if (!error && data) {
-      setInquiries(data);
-    }
+    if (recData) setInquiries(recData);
+
+    // Sent
+    const { data: sentData } = await supabase
+      .from('inquiries')
+      .select(`
+        *,
+        seller:seller_id (full_name, phone_number, whatsapp_number),
+        listings:listing_id (title)
+      `)
+      .eq('buyer_id', userId)
+      .order('created_at', { ascending: false });
+
+    if (sentData) setSentInquiries(sentData);
+
     setLoading(false);
   }
 
@@ -42,7 +57,6 @@ export default function OwnerInbox() {
       .eq('id', id);
 
     if (!error) {
-      // Optimistic update
       setInquiries(prev => prev.map(inq => inq.id === id ? { ...inq, status: newStatus } : inq));
     } else {
       alert("Error: " + error.message);
@@ -56,43 +70,87 @@ export default function OwnerInbox() {
   return (
     <div className="container" style={{ padding: 'var(--space-8) 0', maxWidth: '800px', margin: '0 auto' }}>
       <div style={{ textAlign: 'center', padding: 'var(--space-8)', background: 'linear-gradient(135deg, #0f0f23, #1a1a3e)', borderRadius: 'var(--radius-2xl)', marginBottom: 'var(--space-8)' }}>
-        <h1 style={{ margin: 0 }}>📬 Owner Request Inbox</h1>
-        <p style={{ color: 'var(--text-secondary)' }}>Review and respond to customer inquiries.</p>
+        <h1 style={{ margin: 0 }}>📬 Inbox</h1>
+        <p style={{ color: 'var(--text-secondary)' }}>Manage your sent and received inquiries.</p>
       </div>
 
-      {loading ? <p>Loading your inquiries...</p> : inquiries.length === 0 ? (
-        <p style={{ textAlign: 'center', color: 'var(--text-muted)' }}>You have no inquiries yet.</p>
-      ) : (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
-          {inquiries.map(inq => (
-            <div key={inq.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'var(--glass-bg)', padding: 'var(--space-5)', borderRadius: 'var(--radius-xl)', border: '1px solid var(--border-default)' }}>
-              <div>
-                <h4 style={{ margin: '0 0 var(--space-1)' }}>{inq.listings?.title || 'Unknown Item'}</h4>
-                <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-                  From: <strong>{inq.buyer?.full_name || 'Anonymous'}</strong> ({inq.buyer?.location_area || 'Unknown Area'})
-                </div>
-                <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: '4px' }}>"{inq.message || 'I am interested in this listing.'}"</div>
-              </div>
+      <div style={{ display: 'flex', gap: 'var(--space-2)', marginBottom: 'var(--space-6)', background: 'var(--bg-card)', borderRadius: 'var(--radius-full)', padding: 'var(--space-1)', border: '1px solid var(--border-default)' }}>
+        <button onClick={() => setTab('received')} style={{ flex: 1, padding: 'var(--space-2) var(--space-4)', borderRadius: 'var(--radius-full)', border: 'none', background: tab === 'received' ? 'var(--gradient-primary)' : 'transparent', color: tab === 'received' ? '#fff' : 'var(--text-muted)', cursor: 'pointer', fontWeight: 600 }}>📥 Received ({inquiries.length})</button>
+        <button onClick={() => setTab('sent')} style={{ flex: 1, padding: 'var(--space-2) var(--space-4)', borderRadius: 'var(--radius-full)', border: 'none', background: tab === 'sent' ? 'var(--gradient-primary)' : 'transparent', color: tab === 'sent' ? '#fff' : 'var(--text-muted)', cursor: 'pointer', fontWeight: 600 }}>📤 Sent ({sentInquiries.length})</button>
+      </div>
 
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)', alignItems: 'flex-end' }}>
-                <span style={{ fontSize: '0.75rem', fontWeight: 700, padding: '4px 10px', borderRadius: '99px', background: inq.status === 'pending' ? 'rgba(245,158,11,0.2)' : inq.status === 'approved' ? 'rgba(16,185,129,0.2)' : 'rgba(239,68,68,0.2)', color: inq.status === 'pending' ? '#f59e0b' : inq.status === 'approved' ? '#10b981' : '#ef4444' }}>
-                  {inq.status.toUpperCase()}
-                </span>
-                
-                {inq.status === 'pending' && (
-                  <div style={{ display: 'flex', gap: '8px' }}>
-                    <button onClick={() => handleUpdateStatus(inq.id, 'approved')} className="btn btn-sm" style={{ background: '#10b981', color: 'white' }}>Approve</button>
-                    <button onClick={() => handleUpdateStatus(inq.id, 'rejected')} className="btn btn-sm btn-outline" style={{ borderColor: '#ef4444', color: '#ef4444' }}>Reject</button>
+      {loading ? <p>Loading your inbox...</p> : (
+        tab === 'received' ? (
+          inquiries.length === 0 ? (
+            <p style={{ textAlign: 'center', color: 'var(--text-muted)' }}>You have no received inquiries.</p>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
+              {inquiries.map(inq => (
+                <div key={inq.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'var(--glass-bg)', padding: 'var(--space-5)', borderRadius: 'var(--radius-xl)', border: '1px solid var(--border-default)' }}>
+                  <div>
+                    <h4 style={{ margin: '0 0 var(--space-1)' }}>{inq.listings?.title || 'Unknown Item'}</h4>
+                    <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+                      From: <strong>{inq.buyer?.full_name || 'Anonymous'}</strong> ({inq.buyer?.location_area || 'Unknown Area'})
+                    </div>
+                    <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: '4px' }}>"{inq.message || 'I am interested in this listing.'}"</div>
                   </div>
-                )}
-                
-                {inq.status === 'approved' && inq.buyer?.phone_number && (
-                  <a href={`tel:${inq.buyer.phone_number}`} className="btn btn-sm btn-glass">📞 Call Buyer</a>
-                )}
-              </div>
+
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)', alignItems: 'flex-end' }}>
+                    <span style={{ fontSize: '0.75rem', fontWeight: 700, padding: '4px 10px', borderRadius: '99px', background: inq.status === 'pending' ? 'rgba(245,158,11,0.2)' : inq.status === 'approved' ? 'rgba(16,185,129,0.2)' : 'rgba(239,68,68,0.2)', color: inq.status === 'pending' ? '#f59e0b' : inq.status === 'approved' ? '#10b981' : '#ef4444' }}>
+                      {inq.status.toUpperCase()}
+                    </span>
+                    
+                    {inq.status === 'pending' && (
+                      <div style={{ display: 'flex', gap: '8px' }}>
+                        <button onClick={() => handleUpdateStatus(inq.id, 'approved')} className="btn btn-sm" style={{ background: '#10b981', color: 'white' }}>Approve</button>
+                        <button onClick={() => handleUpdateStatus(inq.id, 'rejected')} className="btn btn-sm btn-outline" style={{ borderColor: '#ef4444', color: '#ef4444' }}>Reject</button>
+                      </div>
+                    )}
+                    
+                    {inq.status === 'approved' && inq.buyer?.phone_number && (
+                      <a href={`tel:${inq.buyer.phone_number}`} className="btn btn-sm btn-glass" style={{ textDecoration: 'none' }}>📞 Call Buyer</a>
+                    )}
+                  </div>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
+          )
+        ) : (
+          sentInquiries.length === 0 ? (
+            <p style={{ textAlign: 'center', color: 'var(--text-muted)' }}>You have not sent any inquiries yet.</p>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
+              {sentInquiries.map(inq => (
+                <div key={inq.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'var(--glass-bg)', padding: 'var(--space-5)', borderRadius: 'var(--radius-xl)', border: '1px solid var(--border-default)' }}>
+                  <div>
+                    <h4 style={{ margin: '0 0 var(--space-1)' }}>{inq.listings?.title || 'Unknown Item'}</h4>
+                    <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+                      To Seller: <strong>{inq.seller?.full_name || 'Anonymous'}</strong>
+                    </div>
+                    <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: '4px' }}>Your message: "{inq.message || 'I am interested in this listing.'}"</div>
+                  </div>
+
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)', alignItems: 'flex-end' }}>
+                    <span style={{ fontSize: '0.75rem', fontWeight: 700, padding: '4px 10px', borderRadius: '99px', background: inq.status === 'pending' ? 'rgba(245,158,11,0.2)' : inq.status === 'approved' ? 'rgba(16,185,129,0.2)' : 'rgba(239,68,68,0.2)', color: inq.status === 'pending' ? '#f59e0b' : inq.status === 'approved' ? '#10b981' : '#ef4444' }}>
+                      {inq.status === 'pending' ? 'AWAITING SELLER' : inq.status.toUpperCase()}
+                    </span>
+                    
+                    {inq.status === 'approved' && (
+                      <div style={{ display: 'flex', gap: '8px' }}>
+                        {inq.seller?.phone_number && (
+                          <a href={`tel:${inq.seller.phone_number}`} className="btn btn-sm btn-glass" style={{ background: '#10b981', color: 'white', textDecoration: 'none' }}>📞 Call</a>
+                        )}
+                        {inq.seller?.whatsapp_number && (
+                          <a href={`https://wa.me/${inq.seller.whatsapp_number}`} target="_blank" rel="noreferrer" className="btn btn-sm btn-glass" style={{ background: '#22c55e', color: 'white', textDecoration: 'none' }}>💬 WA</a>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )
+        )
       )}
     </div>
   );

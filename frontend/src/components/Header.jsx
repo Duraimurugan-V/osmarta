@@ -33,10 +33,8 @@ export default function Header() {
   return (
     <header className="site-header scrolled" id="site-header">
       <div className="header-inner container">
-        <Link to="/" className="header-logo" style={{ textDecoration: 'none' }}>
-          <span className="logo-text" style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.5px' }}>
-            OS<span className="logo-accent" style={{ color: 'var(--brand-primary)' }}>MARTA</span>
-          </span>
+        <Link to="/" className="header-logo" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
+          <img src="/logo.jpg" alt="OSMARTA" style={{ height: '40px', width: 'auto', borderRadius: '8px' }} />
         </Link>
         <div className="header-search">
           <div className="search-wrapper">

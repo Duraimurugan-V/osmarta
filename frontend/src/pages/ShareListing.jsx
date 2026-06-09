@@ -9,7 +9,7 @@ export default function ShareListing() {
   const [subCategory, setSubCategory] = useState('Electronics');
   const [stockInfo, setStockInfo] = useState('');
   const [availabilityTime, setAvailabilityTime] = useState('');
-  const [imageUrls, setImageUrls] = useState(['', '', '', '']);
+  const [imageUrls, setImageUrls] = useState(['', '', '', '', '']);
   const [locationLink, setLocationLink] = useState('');
   const [contactPhone, setContactPhone] = useState('');
   const [contactWhatsapp, setContactWhatsapp] = useState('');
@@ -60,7 +60,7 @@ export default function ShareListing() {
     } else {
       alert("Listing published successfully!");
       setTitle(''); setDesc(''); setPrice(''); setStockInfo(''); setAvailabilityTime('');
-      setImageUrls(['', '', '', '']); setLocationLink(''); setContactPhone(''); setContactWhatsapp('');
+      setImageUrls(['', '', '', '', '']); setLocationLink(''); setContactPhone(''); setContactWhatsapp('');
     }
   };
 
@@ -122,7 +122,7 @@ export default function ShareListing() {
         </div>
 
         <div style={{ marginBottom: 'var(--space-4)' }}>
-          <label style={{ display: 'block', marginBottom: 'var(--space-2)' }}>Image URLs (Max 4, Optional)</label>
+          <label style={{ display: 'block', marginBottom: 'var(--space-2)' }}>Image URLs (Max 5, Optional)</label>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             {imageUrls.map((url, i) => (
               <input key={i} type="url" value={url} onChange={e => {
